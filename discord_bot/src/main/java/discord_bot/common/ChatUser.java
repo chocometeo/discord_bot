@@ -3,6 +3,8 @@ package discord_bot.common;
 import java.util.Calendar;
 import java.util.Date;
 
+import discord_bot.service.ChatUserCheckService;
+
 public class ChatUser extends Thread {
 	
 	// スレッド制御
@@ -38,19 +40,20 @@ public class ChatUser extends Thread {
 			if (nowDate.after(setDate)) {
 				// 
 				isStop = true;
+				break;
 			}
 			
 			// スレッドスリープ
 			try {
 				Thread.sleep(60000);
 			} catch (InterruptedException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
-				isRunning = false;
+				isStop = true;
+				break;
 			}
 		}
-		System.out.println("ユーザ破棄");
 		isRunning = false;
+		ChatUserCheckService.deleteChatUser(userId);
+		System.out.println("ユーザ破棄");
 	}
 	
 	/*
@@ -85,9 +88,10 @@ public class ChatUser extends Thread {
 		
 		// 起動している場合
 		isStop = true;
+		interrupt();
 		
 		try {
-			this.join();
+			join();
 			System.out.println("停止に成功");
 		} catch (InterruptedException e) {
 			// TODO 自動生成された catch ブロック

@@ -66,14 +66,14 @@ public class SlashCommandService extends ListenerAdapter {
 		} else if (event.getName().equals("sendmsg") && event.getOption("status").getAsString().equals("on")) {
 			// /sendmsg on : メッセージの自動送信を有効
 			if (ChatUserCheckService.setChatUser(event.getUser().getId(), event.getUser().getName())) {
-				event.reply("メッセージの自動送信を有効").queue();
+				event.reply("メッセージの自動送信 有効").queue();
 			} else {
 				event.reply("処理に失敗").queue();
 			}
 		} else if (event.getName().equals("sendmsg") && event.getOption("status").getAsString().equals("off")) {
 			// /sendmsg off : メッセージの自動送信を無効
 			if (ChatUserCheckService.deleteChatUser(event.getUser().getId())) {
-				event.reply("メッセージの自動送信を無効").queue();
+				event.reply("メッセージの自動送信 無効").queue();
 			} else {
 				event.reply("処理に失敗").queue();
 			}

@@ -58,7 +58,7 @@ public class ChatUserCheckService {
 			}
 			// スレッドスリープ
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 			}
 		}
@@ -72,18 +72,24 @@ public class ChatUserCheckService {
 	public static boolean deleteChatUser(String userId) {
 
 		ChatUser chatuser = getChatUser(userId);
+		
 		if (chatuser != null) {
-			// 有効ユーザを無効にする
-			if (chatuser.stopChatUser()) {
-				// リストから削除する
+			if (chatuser.getStatus()) {
+				// 有効ユーザを無効にする
+				if (chatuser.stopChatUser()) {
+					// リストから削除する
+					userList.remove(chatuser);
+					return true;
+				}
+			} else {
+				// 指定時間経過のためリストから削除する
 				userList.remove(chatuser);
 				return true;
-			} else {
-				return false;
 			}
 		} else {
 			System.out.println("指定されたユーザが見つかりません");
-			return false;
+			return true;
 		}
+		return false;
 	}
 }
