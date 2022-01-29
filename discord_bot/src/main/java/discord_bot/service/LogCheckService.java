@@ -134,10 +134,8 @@ public class LogCheckService extends Thread {
 			
 			// スレッドスリープ
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
 			}
 		}
 		

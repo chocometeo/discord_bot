@@ -170,6 +170,8 @@ public class MessageListenerEvent {
 		// ユーザチェック
 		if (!ChatUserCheckService.isChatUser(event.getAuthor().getId())) {
 			// 対象ユーザではないため処理終了
+			// オリジナルメッセージの削除
+			event.getMessage().delete().queue();
 			return;
 		}
 		
