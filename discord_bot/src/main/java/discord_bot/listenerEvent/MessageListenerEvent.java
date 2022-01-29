@@ -20,57 +20,60 @@ public class MessageListenerEvent {
 		// 送信されたメッセージを取得
 		String message = event.getMessage().getContentRaw();
 
-		// help : コマンド一覧
-		if (message.startsWith("help")) {
-			help(event);
-			return;
-		}
+		// コマンドチャンネルの場合
+		if (event.getChannel().getId().equals(Constants.COMMANDCHANNEL_ID)) {
 
-		// server start : server起動シェルの実行
-		if (message.startsWith("server start")) {
-			ServerUtil.start();
-			return;
-		}
+			// help : コマンド一覧
+			if (message.startsWith("help")) {
+				help(event);
+				return;
+			}
 
-		// list : サーバ内のplayerのリストを表示
-		if (message.startsWith("list")) {
-			MinecraftUtil.list();
-			return;
-		}
+			// server start : server起動シェルの実行
+			if (message.startsWith("server start")) {
+				ServerUtil.start();
+				return;
+			}
 
-		// sendmsg_on : Discordチャットの転送開始
-		if (message.startsWith("sendmsg_on")) {
-			setSendDiscordMessage(event, true);
-			return;
-		}
-		// sendmsg_off : Discordチャットの転送停止
-		if (message.startsWith("sendmsg_off")) {
-			setSendDiscordMessage(event, false);
-			return;
-		}
+			// list : サーバ内のplayerのリストを表示
+			if (message.startsWith("list")) {
+				MinecraftUtil.list();
+				return;
+			}
 
-		// login_on : ログイン通知の開始
-		if (message.startsWith("login_on")) {
-			setLoginMessage(event, true);
-			return;
+			// sendmsg_on : Discordチャットの転送開始
+			if (message.startsWith("sendmsg_on")) {
+				setSendDiscordMessage(event, true);
+				return;
+			}
+			// sendmsg_off : Discordチャットの転送停止
+			if (message.startsWith("sendmsg_off")) {
+				setSendDiscordMessage(event, false);
+				return;
+			}
+
+			// login_on : ログイン通知の開始
+			if (message.startsWith("login_on")) {
+				setLoginMessage(event, true);
+				return;
+			}
+			// login_off : ログイン通知の停止
+			if (message.startsWith("login_off")) {
+				setLoginMessage(event, false);
+				return;
+			}
+
+			// chat_on : ゲーム内チャットのログ出力開始
+			if (message.startsWith("chat_on")) {
+				setChatLog(event, true);
+				return;
+			}
+			// chat_off : ゲーム内チャットのログ出力停止
+			if (message.startsWith("chat_off")) {
+				setChatLog(event, false);
+				return;
+			}
 		}
-		// login_off : ログイン通知の停止
-		if (message.startsWith("login_off")) {
-			setLoginMessage(event, false);
-			return;
-		}
-		
-		// chat_on : ゲーム内チャットのログ出力開始
-		if (message.startsWith("chat_on")) {
-			setChatLog(event, true);
-			return;
-		}
-		// chat_off : ゲーム内チャットのログ出力停止
-		if (message.startsWith("chat_off")) {
-			setChatLog(event, false);
-			return;
-		}
-		
 		// チャットチャンネルの場合
 		if (event.getChannel().getId().equals(Constants.CHATCHANNEL_ID)) {
 			getDiscordMessage(event);

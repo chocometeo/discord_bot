@@ -19,6 +19,10 @@ public class PropertyUtil {
 		try {
 			istream = new FileInputStream(prppertyFilePath);
 			properties.load(istream);
+			// テスト用の設定値の読み取り
+			if (properties.getProperty("test_mode").equals("true")) {
+				return properties.getProperty("TEST_" + key);
+			}
 			return properties.getProperty(key);
 		} catch (IOException e) {
 			e.printStackTrace();
