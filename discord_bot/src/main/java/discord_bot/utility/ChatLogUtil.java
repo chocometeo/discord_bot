@@ -87,11 +87,11 @@ public class ChatLogUtil {
 				{"screen","-p","0","-S","minecraft","-X","stuff",
 						"tellraw @a {\"text\": \"<" + chatmessage.userName + "> " + chatmessage.message + "\"}\\015"});
 		
-		if (!RunShellScript.result) {
+		chatmessage.result = RunShellScript.result;
+		if (!chatmessage.result) {
 			// 実行エラーで出力
-			System.out.println(RunShellScript.shellPath);
+			System.out.println("実行エラー:" + RunShellScript.shellPath);
 		}
-
 		return chatmessage;
 	}
 

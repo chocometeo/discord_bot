@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import discord_bot.common.ChatUser;
+import discord_bot.common.CommandResult;
 
 public class ChatUserCheckService {
 	
@@ -37,12 +38,14 @@ public class ChatUserCheckService {
 	/*
 	 *  新しいユーザを登録
 	 */
-	public static boolean setChatUser(String userId, String userName) {
+	public static CommandResult setChatUser(String userId, String userName) {
+		
+		
 		
 		if (isChatUser(userId)) {
 			// 既に存在
 			System.out.println("ユーザ登録済み");
-			return true;
+			return new CommandResult(true, 1, "");
 		}
 
 		ChatUser chatUser = new ChatUser(userId, userName);
@@ -52,7 +55,7 @@ public class ChatUserCheckService {
 			if (chatUser.getStatus()) {
 				System.out.println("ユーザ登録に成功");
 				userList.add(chatUser);
-				return true;
+				return new CommandResult(true, 0, "");
 			} else {
 				count++;
 			}
@@ -63,13 +66,13 @@ public class ChatUserCheckService {
 			}
 		}
 		System.out.println("ユーザ登録に失敗");
-		return false;
+		return new CommandResult(false, 2, "");
 	}
 	
 	/*
 	 *  ユーザ登録の解除
 	 */
-	public static boolean deleteChatUser(String userId) {
+	public static CommandResult deleteChatUser(String userId) {
 
 		ChatUser chatuser = getChatUser(userId);
 		
@@ -79,17 +82,16 @@ public class ChatUserCheckService {
 				if (chatuser.stopChatUser()) {
 					// リストから削除する
 					userList.remove(chatuser);
-					return true;
+					return new CommandResult(true, 0, "");
 				}
 			} else {
 				// 指定時間経過のためリストから削除する
 				userList.remove(chatuser);
-				return true;
+				return new CommandResult(true, 0, "");
 			}
 		} else {
-			System.out.println("指定されたユーザが見つかりません");
-			return true;
+			return new CommandResult(true, 1, "指定されたユーザが見つかりません");
 		}
-		return false;
+		return new CommandResult(false, 2, "");
 	}
 }

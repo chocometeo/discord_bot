@@ -1,6 +1,7 @@
 package discord_bot.listenerEvent;
 
 import discord_bot.common.ChatMessage;
+import discord_bot.common.CommandResult;
 import discord_bot.common.Constants;
 import discord_bot.service.ChatUserCheckService;
 import discord_bot.service.LogCheckService;
@@ -140,18 +141,25 @@ public class MessageListenerEvent {
 	public static void setSendDiscordMessage(MessageReceivedEvent event, boolean flg) {
 
 		if (flg) {
-			if (ChatUserCheckService.setChatUser(event.getAuthor().getId(), event.getAuthor().getName())) {
+			CommandResult result = ChatUserCheckService.setChatUser(event.getAuthor().getId(), event.getAuthor().getName());
+			if (result.code == 0) {
 				event.getTextChannel().sendMessage("入力チャットのマインクラフト転送の開始").queue();
-				return;
+			} else if (result.code == 1) {
+				event.getTextChannel().sendMessage("既にチャットは転送されています").queue();
+			} else {
+				event.getTextChannel().sendMessage("入力チャットの自動転送有効化に失敗").queue();
 			}
 		} else {
-			if (ChatUserCheckService.deleteChatUser(event.getAuthor().getId())) {
+			CommandResult result = ChatUserCheckService.deleteChatUser(event.getAuthor().getId());
+			if (result.code == 0) {
 				event.getTextChannel().sendMessage("入力チャットのマインクラフト転送の停止").queue();
-				return;
+			} else if (result.code == 1) {
+				event.getTextChannel().sendMessage("入力チャットの転送は有効ではありません").queue();
+			} else {
+				event.getTextChannel().sendMessage("入力チャットの自動転送無効化に失敗").queue();
 			}
 		}
-		
-		event.getTextChannel().sendMessage("処理に失敗").queue();
+		return;
 	}
 	
 	/*
@@ -173,10 +181,12 @@ public class MessageListenerEvent {
 			event.getTextChannel().sendMessage("メッセージの送信に失敗").queue();
 		}
 		ChatLogUtil.sendDiscordChat(chatmessage).getMessage();
-		// オリジナルメッセージの削除
 		
-		// 成形したメッセージの表示
-		event.getTextChannel().sendMessage("[" + chatmessage.userName + "] " + chatmessage.message).queue();
-		
+		if (chatmessage.result) {
+			// オリジナルメッセージの削除
+			event.getMessage().delete().queue();
+			// 成形したメッセージの表示
+			event.getTextChannel().sendMessage("[" + chatmessage.userName + "] " + chatmessage.message).queue();
+		}
 	}
 }
