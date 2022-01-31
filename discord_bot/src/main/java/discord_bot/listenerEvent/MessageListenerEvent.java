@@ -189,6 +189,8 @@ public class MessageListenerEvent {
 			event.getMessage().delete().queue();
 			// 成形したメッセージの表示
 			event.getTextChannel().sendMessage("[" + chatmessage.userName + "] " + chatmessage.message).queue();
+			// ユーザの有効期間の更新
+			ChatUserCheckService.getChatUser(event.getAuthor().getId()).upddateValidityPeriod();
 		}
 	}
 }

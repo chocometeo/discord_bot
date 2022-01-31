@@ -14,24 +14,23 @@ public class ChatUser extends Thread {
 	// ユーザ情報
 	public String userId;
 	public String userName;
-		
+	
+	// 有効期限
+	public Date setDate;
+	
+	
 	public ChatUser (String uId, String uName) {
 		isStop = false;
 		userId = uId;
 		userName = uName;
+		// 処理開始時刻から閾値の取得
+		upddateValidityPeriod();
 	}
 	
 	public void run() {
-		System.out.println("ユーザ登録");
+		System.out.println("[" + userName + "]" + "ユーザ登録");
 		// スレッドの状態を更新
 		isRunning = true;
-		
-		// 処理開始時刻から閾値の取得
-		Date setDate = new Date();
-		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(setDate);
-		startCal.add(Calendar.MINUTE, 30);
-		setDate = startCal.getTime();
 		
 		while (!isStop) {
 			Date nowDate = new Date();
@@ -53,7 +52,8 @@ public class ChatUser extends Thread {
 		}
 		isRunning = false;
 		ChatUserCheckService.deleteChatUser(userId);
-		System.out.println("ユーザ破棄");
+		System.out.println("[" + userName + "]" + "ユーザ登録削除");
+		ContactBot.jda.getTextChannelById(Constants.COMMANDCHANNEL_ID).sendMessage("[" + userName + "]" + "チャット転送の終了").queue();
 	}
 	
 	/*
@@ -105,5 +105,17 @@ public class ChatUser extends Thread {
 		return this.isRunning;		
 	}
 	
+	/*
+	 *  ユーザの有効期間を延長する
+	 *
+	 */
+	public Date upddateValidityPeriod() {
+		setDate = new Date();
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(setDate);
+		startCal.add(Calendar.MINUTE, 30);
+		setDate = startCal.getTime();
+		return setDate;
+	}
 	
 }
